@@ -1,37 +1,52 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, useMemo, ReactNode } from "react";
 
-interface StateContextType {
-  allData: any[];
-}
+// interface StateContextType {
+//   allData: CountryType[];
+//   setAllData: (): React.Dispatch<React.SetStateAction<never[]>>
+// }
 
-type Country = {
-  domains: String[];
-  country: String;
-  alpha_two_code: String;
-  "state-province": String | null;
-  web_pages: String[];
-  name: String;
-};
-
-const StateContext = createContext<StateContextType | null>(null);
+// const StateContext = createContext<StateContextType | null>(null);
+const StateContext = createContext<any | null>(null);
 
 const StateContextProvider = (props: { children: ReactNode }) => {
-  const [allData, setAllData] = useState([]);
+  const [allData, setAllData] = useState<CountryType[]>([]);
   const [resultsPerPage, setResultsPerPage] = useState(15);
+  const countries = useMemo(() => filterCountries(allData), [allData]);
 
-  const getCountries = (): Country[] => {
-    const countries: Country[] = [];
-
-    return countries;
+  const state = {
+    allData,
+    setAllData,
+    resultsPerPage,
+    setResultsPerPage,
+    countries,
   };
-
-  const state = { allData, setAllData, resultsPerPage, setResultsPerPage };
 
   return (
     <StateContext.Provider value={state}>
       {props.children}
     </StateContext.Provider>
   );
+};
+
+const filterCountries = (allData: CountryType[]): CountryType[] => {
+  const countryCodes = new Set<String>();
+  const countries: CountryType[] = [];
+
+  if (allData) {
+    allData.map((c) => countryCodes.add(c.alpha_two_code));
+  }
+
+  for (const code of countryCodes) {
+    const country: CountryType =
+      allData[allData.findIndex((c) => c.alpha_two_code === code)];
+    countries.push({
+      alpha_two_code: code,
+      country: country.country,
+      name: country.name,
+    });
+  }
+
+  return countries;
 };
 
 export { StateContext, StateContextProvider };
