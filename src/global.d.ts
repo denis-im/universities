@@ -2,11 +2,11 @@ export {};
 
 declare global {
   type CountryType = {
-    domains?: String[];
-    country: String;
-    alpha_two_code: String;
-    "state-province"?: String | null;
-    web_pages?: String[];
-    name: String;
+    domains?: string[];
+    country: string;
+    alpha_two_code: string;
+    "state-province"?: string | null;
+    web_pages?: string[];
+    name?: string;
   };
 }

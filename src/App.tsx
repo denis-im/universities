@@ -7,11 +7,12 @@ import ReactCountryFlag from "react-country-flag";
 
 function App() {
   const { allData, setAllData, countries } = useContext(StateContext);
+
   useEffect(() => {
     getAllData(setAllData);
+    // We fetch data only on startup
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log(countries);
 
   return (
     <div className="App">

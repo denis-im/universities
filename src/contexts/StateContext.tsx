@@ -1,4 +1,5 @@
 import React, { createContext, useState, useMemo, ReactNode } from "react";
+import { sorterAsc } from "../helper";
 
 // interface StateContextType {
 //   allData: CountryType[];
@@ -29,23 +30,19 @@ const StateContextProvider = (props: { children: ReactNode }) => {
 };
 
 const filterCountries = (allData: CountryType[]): CountryType[] => {
-  const countryCodes = new Set<String>();
+  const countryCodes = new Set<string>();
   const countries: CountryType[] = [];
 
-  if (allData) {
-    allData.map((c) => countryCodes.add(c.alpha_two_code));
-  }
-
+  allData.map((c) => countryCodes.add(c.alpha_two_code));
   for (const code of countryCodes) {
     const country: CountryType =
       allData[allData.findIndex((c) => c.alpha_two_code === code)];
     countries.push({
       alpha_two_code: code,
       country: country.country,
-      name: country.name,
     });
   }
-
+  countries.sort(sorterAsc("country"));
   return countries;
 };
 
