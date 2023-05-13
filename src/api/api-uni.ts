@@ -1,10 +1,9 @@
 import { API_URL } from "../config";
 
-const getAllData = async (cb: any) => {
+const getAllData = async () => {
   try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    cb(data);
+    const data = await (await fetch(API_URL)).json();
+    return data;
   } catch (err) {
     console.log(err);
   }

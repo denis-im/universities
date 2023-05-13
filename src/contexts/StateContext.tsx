@@ -1,5 +1,20 @@
-import React, { createContext, useState, useMemo, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useMemo,
+  useCallback,
+  ReactNode,
+} from "react";
 import { sorterAsc } from "../helper";
+
+type CountryType = {
+  domains?: string[];
+  country: string;
+  alpha_two_code: string;
+  "state-province"?: string | null;
+  web_pages?: string[];
+  name?: string;
+};
 
 // interface StateContextType {
 //   allData: CountryType[];
@@ -11,7 +26,7 @@ const StateContext = createContext<any | null>(null);
 
 const StateContextProvider = (props: { children: ReactNode }) => {
   const [allData, setAllData] = useState<CountryType[]>([]);
-  const [resultsPerPage, setResultsPerPage] = useState(15);
+  const [resultsPerPage, setResultsPerPage] = useState<Number>(10);
   const countries = useMemo(() => filterCountries(allData), [allData]);
 
   const state = {

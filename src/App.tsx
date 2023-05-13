@@ -9,7 +9,10 @@ function App() {
   const { allData, setAllData, countries } = useContext(StateContext);
 
   useEffect(() => {
-    getAllData(setAllData);
+    (async () => {
+      const data = await getAllData();
+      setAllData(data);
+    })();
     // We fetch data only on startup
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
