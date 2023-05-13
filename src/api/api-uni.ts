@@ -5,7 +5,7 @@ const getAllData = async () => {
     const data = await (await fetch(API_URL)).json();
     return data;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 

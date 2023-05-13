@@ -1,10 +1,5 @@
-import React, {
-  createContext,
-  useState,
-  useMemo,
-  useCallback,
-  ReactNode,
-} from "react";
+import { createContext, useState, useMemo, useEffect, ReactNode } from "react";
+import { getAllData } from "../api/api-uni";
 import { sorterAsc } from "../helper";
 
 type CountryType = {
@@ -28,6 +23,15 @@ const StateContextProvider = (props: { children: ReactNode }) => {
   const [allData, setAllData] = useState<CountryType[]>([]);
   const [resultsPerPage, setResultsPerPage] = useState<Number>(10);
   const countries = useMemo(() => filterCountries(allData), [allData]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getAllData();
+      setAllData(data);
+    })();
+    // We fetch data only on startup
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const state = {
     allData,
