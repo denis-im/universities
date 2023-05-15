@@ -2,15 +2,6 @@ import { createContext, useState, useMemo, useEffect, ReactNode } from "react";
 import { getAllData } from "../api/api-uni";
 import { sorterAsc } from "../helper";
 
-type CountryType = {
-  domains?: string[];
-  country: string;
-  alpha_two_code: string;
-  "state-province"?: string | null;
-  web_pages?: string[];
-  name?: string;
-};
-
 // interface StateContextType {
 //   allData: CountryType[];
 //   setAllData: (): React.Dispatch<React.SetStateAction<never[]>>
@@ -21,12 +12,22 @@ const StateContext = createContext<any | null>(null);
 
 const StateContextProvider = (props: { children: ReactNode }) => {
   const [allData, setAllData] = useState<CountryType[]>([]);
-  const [resultsPerPage, setResultsPerPage] = useState<Number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const countries = useMemo(() => filterCountries(allData), [allData]);
 
   useEffect(() => {
     (async () => {
       const data = await getAllData();
+
+      // Correct data, there is "UK" record, which is invalid
+      const uk: CountryType[] = data.filter(
+        (c: CountryType) => c.alpha_two_code === "UK"
+      );
+      for (let i: number = 0; i < uk.length; i++) {
+        uk[i].country = "United Kingdom";
+        uk[i].alpha_two_code = "GB";
+      }
+
       setAllData(data);
     })();
     // We fetch data only on startup
@@ -36,8 +37,8 @@ const StateContextProvider = (props: { children: ReactNode }) => {
   const state = {
     allData,
     setAllData,
-    resultsPerPage,
-    setResultsPerPage,
+    rowsPerPage,
+    setRowsPerPage,
     countries,
   };
 
@@ -59,6 +60,7 @@ const filterCountries = (allData: CountryType[]): CountryType[] => {
     countries.push({
       alpha_two_code: code,
       country: country.country,
+      count: allData.filter((c) => c.alpha_two_code === code).length,
     });
   }
   countries.sort(sorterAsc("country"));
