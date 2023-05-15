@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import Countries from "./components/Countries";
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
+import Footer from "./components/Footer";
+import Universities from "./components/Universities";
 
 function Layout() {
   return (
@@ -16,6 +18,7 @@ function Layout() {
     >
       <Header />
       <Outlet />
+      <Footer />
     </Box>
   );
 }
@@ -27,6 +30,7 @@ const MainRouter = () => {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Countries />} />
+        <Route path="/country/:code" element={<Universities />} />
       </Route>
     </Routes>
   );

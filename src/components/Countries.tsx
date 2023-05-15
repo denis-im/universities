@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext } from "react";
 import { StateContext } from "../contexts/StateContext";
 import Flag from "./Flag";
 import Paper from "@mui/material/Paper";
@@ -13,6 +13,7 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
@@ -22,6 +23,7 @@ const Countries = (props: Props) => {
   const [page, setPage] = React.useState(0);
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("country");
+  const navigate = useNavigate();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -162,7 +164,7 @@ const Countries = (props: Props) => {
         <CircularProgress
           sx={{
             marginLeft: "50%",
-            marginTop: "50%",
+            marginTop: "30%",
           }}
         />
       </Box>
@@ -206,7 +208,13 @@ const Countries = (props: Props) => {
           <TableBody>
             {visibleRows.map((country, i: number) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={`c${i}`}>
+                <TableRow
+                  hover
+                  role="checkbox"
+                  tabIndex={-1}
+                  key={`c${i}`}
+                  onClick={() => navigate(`/country/${country.alpha_two_code}`)}
+                >
                   {columns.map((column) => {
                     return (
                       <TableCell key={column.id} align={column.align}>

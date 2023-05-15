@@ -7,8 +7,10 @@ type Props = {};
 
 const Header = (props: Props) => {
   return (
-    <Box sx={{ maxHeight: "10vh" }}>
-      <Typography variant="h3">Header</Typography>
+    <Box>
+      <Typography variant="h4" align="center" sx={{ margin: "20px" }}>
+        Universities App
+      </Typography>
     </Box>
   );
 };

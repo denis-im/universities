@@ -63,7 +63,6 @@ const filterCountries = (allData: CountryType[]): CountryType[] => {
       count: allData.filter((c) => c.alpha_two_code === code).length,
     });
   }
-  countries.sort(sorterAsc("country"));
   return countries;
 };
 
