@@ -1,9 +1,7 @@
-import { useContext } from "react";
-import { StateContext } from "./contexts/StateContext";
-import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
+import React from "react";
+import { Routes, Route, Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Countries from "./components/Countries";
-import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Footer from "./components/Footer";
 import Universities from "./components/Universities";
@@ -25,8 +23,6 @@ function Layout() {
 }
 
 const MainRouter = () => {
-  const location = useLocation();
-
   return (
     <Routes>
       <Route element={<Layout />}>

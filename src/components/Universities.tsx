@@ -60,7 +60,7 @@ const Universities = (props: Props) => {
     );
     setData(filterData(newData, code!));
     setPage(0);
-  }, [searchTerm, allData]);
+  }, [searchTerm, allData, code]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
