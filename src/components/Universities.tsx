@@ -54,6 +54,10 @@ const Universities = (props: Props) => {
   const [orderBy, setOrderBy] = React.useState<keyof Data>("name");
   const navigate = useNavigate();
 
+  const countryName = allData.find(
+    (c: CountryType) => c.alpha_two_code === code
+  ).country;
+
   useEffect(() => {
     const newData = allData.filter((c: CountryType) =>
       c.name!.toLowerCase().includes(searchTerm)
@@ -167,6 +171,15 @@ const Universities = (props: Props) => {
 
   return (
     <>
+      <Typography
+        sx={{
+          margin: "auto",
+          marginBottom: 1,
+        }}
+        variant="subtitle1"
+      >
+        Universities in <b>{countryName}</b>
+      </Typography>
       <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <Paper
         sx={{
