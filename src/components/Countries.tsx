@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
+import { getComparator, stableSort } from "../helper";
 
 type Props = {};
 
@@ -60,48 +61,6 @@ const Countries = (props: Props) => {
       )
     : [];
 
-  function getComparator<Key extends keyof any>(
-    order: Order,
-    orderBy: Key
-  ): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string }
-  ) => number {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-
-  // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-  // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-  // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-  // with exampleArray.slice().sort(exampleComparator)
-  function stableSort<T>(
-    array: readonly T[],
-    comparator: (a: T, b: T) => number
-  ) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-
-  function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  type Order = "asc" | "desc";
   interface Data {
     country: string;
     alpha_two_code: string;
@@ -213,7 +172,7 @@ const Countries = (props: Props) => {
                   role="checkbox"
                   tabIndex={-1}
                   key={`c${i}`}
-                  onClick={() => navigate(`/country/${country.alpha_two_code}`)}
+                  onClick={() => navigate(`/${country.alpha_two_code}`)}
                 >
                   {columns.map((column) => {
                     return (

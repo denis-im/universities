@@ -10,4 +10,5 @@ declare global {
     name?: string;
     count?: number;
   };
+  type Order = "asc" | "desc";
 }

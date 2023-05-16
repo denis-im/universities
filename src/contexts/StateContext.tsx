@@ -1,6 +1,6 @@
 import { createContext, useState, useMemo, useEffect, ReactNode } from "react";
 import { getAllData } from "../api/api-uni";
-import { sorterAsc } from "../helper";
+// import { sorterAsc } from "../helper";
 
 // interface StateContextType {
 //   allData: CountryType[];

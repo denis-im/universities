@@ -30,7 +30,7 @@ const MainRouter = () => {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Countries />} />
-        <Route path="/country/:code" element={<Universities />} />
+        <Route path="/:code" element={<Universities />} />
       </Route>
     </Routes>
   );
