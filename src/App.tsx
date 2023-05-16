@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { StateContext } from "./contexts/StateContext";
 import MainRouter from "./MainRouter";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "./assets/styles/App.css";
@@ -26,8 +24,6 @@ const theme = createTheme({
 });
 
 function App() {
-  const { countries } = useContext(StateContext);
-
   return (
     <ThemeProvider theme={theme}>
       <MainRouter />

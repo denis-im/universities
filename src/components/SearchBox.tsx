@@ -1,7 +1,6 @@
 import React from "react";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
@@ -37,9 +36,6 @@ const SearchBox: React.FC<Props> = ({ searchTerm, setSearchTerm }) => {
           value={searchTerm}
           onChange={(e) => handleChange(e)}
         />
-        {/* <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-          <SearchIcon />
-        </IconButton> */}
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
           color="primary"
