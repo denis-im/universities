@@ -20,7 +20,7 @@ const SearchBox: React.FC<Props> = ({ searchTerm, setSearchTerm }) => {
   };
 
   return (
-    <Box display="flex" sx={{ margin: "auto", marginBottom: 0 }}>
+    <Box display="flex" sx={{ margin: "auto", marginBottom: 1 }}>
       <Paper
         component="form"
         sx={{

@@ -16,6 +16,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { getComparator, stableSort } from "../helper";
 import SearchBox from "./SearchBox";
+import Typography from "@mui/material/Typography";
 
 type Props = {};
 
@@ -121,7 +122,7 @@ const Countries = (props: Props) => {
     },
   ];
 
-  if (visibleRows.length === 0)
+  if (countries.length === 0)
     return (
       <Box
         sx={{
@@ -144,83 +145,105 @@ const Countries = (props: Props) => {
     <>
       <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <Paper
-        sx={{ width: "80%", overflow: "hidden", margin: "auto", marginTop: 2 }}
+        sx={{
+          width: "80%",
+          overflow: "hidden",
+          margin: "auto",
+          height: "100%",
+        }}
       >
-        <TableContainer sx={{ height: "calc(100% - 50px);" }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                    sortDirection={orderBy === column.id ? order : false}
-                  >
-                    {column.sortable ? (
-                      <TableSortLabel
-                        active={orderBy === column.id}
-                        direction={orderBy === column.id ? order : "asc"}
-                        onClick={createSortHandler(column.id, column.sortable)}
+        {visibleRows.length === 0 ? (
+          <Typography
+            sx={{
+              marginLeft: "40%",
+              marginTop: "10%",
+            }}
+            variant="h5"
+          >
+            No country has "{searchTerm}" in name
+          </Typography>
+        ) : (
+          <>
+            <TableContainer sx={{ height: "calc(100% - 50px);" }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                        sortDirection={orderBy === column.id ? order : false}
                       >
-                        {column.label}
-                        {orderBy === column.id ? (
-                          <Box component="span" sx={visuallyHidden}>
-                            {order === "desc"
-                              ? "sorted descending"
-                              : "sorted ascending"}
-                          </Box>
-                        ) : null}
-                      </TableSortLabel>
-                    ) : (
-                      <>{column.label}</>
-                    )}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {visibleRows.map((country, i: number) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={`c${i}`}
-                    onClick={() => navigate(`/${country.alpha_two_code}`)}
-                  >
-                    {columns.map((column) => {
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.id === "flag" ? (
-                            <Flag
-                              code={String(country.alpha_two_code)}
-                              country={String(country.country)}
-                            />
-                          ) : (
-                            country[column.id]
-                          )}
-                        </TableCell>
-                      );
-                    })}
+                        {column.sortable ? (
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : "asc"}
+                            onClick={createSortHandler(
+                              column.id,
+                              column.sortable
+                            )}
+                          >
+                            {column.label}
+                            {orderBy === column.id ? (
+                              <Box component="span" sx={visuallyHidden}>
+                                {order === "desc"
+                                  ? "sorted descending"
+                                  : "sorted ascending"}
+                              </Box>
+                            ) : null}
+                          </TableSortLabel>
+                        ) : (
+                          <>{column.label}</>
+                        )}
+                      </TableCell>
+                    ))}
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 15, 30]}
-          component="div"
-          count={countriesFiltered.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          showFirstButton
-          showLastButton
-          sx={{ maxHeight: 80 }}
-        />
+                </TableHead>
+                <TableBody>
+                  {visibleRows.map((country, i: number) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={`c${i}`}
+                        onClick={() => navigate(`/${country.alpha_two_code}`)}
+                      >
+                        {columns.map((column) => {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id === "flag" ? (
+                                <Flag
+                                  code={String(country.alpha_two_code)}
+                                  country={String(country.country)}
+                                />
+                              ) : (
+                                country[column.id]
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 15, 30]}
+              component="div"
+              count={countriesFiltered.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              showFirstButton
+              showLastButton
+              sx={{ maxHeight: 80 }}
+            />
+          </>
+        )}
       </Paper>
     </>
   );

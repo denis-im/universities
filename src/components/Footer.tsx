@@ -9,14 +9,6 @@ import Stack from "@mui/material/Stack";
 
 type Props = {};
 
-// !!!! Decide if will use or remove !!!!
-function toTitleCase(str: string) {
-  return str;
-  return str.replace(/\b\w+/g, function (s) {
-    return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();
-  });
-}
-
 const Footer = (props: Props) => {
   const { countries } = useContext(StateContext);
   const navigate = useNavigate();
@@ -26,6 +18,11 @@ const Footer = (props: Props) => {
     .filter((x) => x)
     .map((p) => ({ path: p, label: p }));
 
+  const backTo = `/${pathnames
+    .map((p) => p.path)
+    .slice(0, pathnames.length - 1)
+    .join("/")}`;
+
   if (countries.length > 0 && pathnames.length > 0) {
     pathnames[0].label = countries.find(
       (c: CountryType) => c.alpha_two_code === pathnames[0].path
@@ -34,14 +31,14 @@ const Footer = (props: Props) => {
 
   return (
     <Stack
-      spacing={2}
+      spacing={6}
       direction="row"
       justifyContent="center"
       alignItems="center"
       sx={{ margin: "10px" }}
     >
       {pathnames[0] && (
-        <Button variant="outlined" onClick={() => navigate("..")}>
+        <Button variant="outlined" onClick={() => navigate(backTo)}>
           Back
         </Button>
       )}
@@ -58,11 +55,11 @@ const Footer = (props: Props) => {
 
           return last ? (
             <Typography color="textPrimary" key={to}>
-              {toTitleCase(value.label)}
+              {value.label}
             </Typography>
           ) : (
-            <Link color="inherit" component={RouterLink} to="/" key={to}>
-              {toTitleCase(value.label)}
+            <Link color="inherit" component={RouterLink} to={to} key={to}>
+              {value.label}
             </Link>
           );
         })}

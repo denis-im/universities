@@ -58,6 +58,7 @@ const filterCountries = (allData: CountryType[]): CountryType[] => {
     const country: CountryType =
       allData[allData.findIndex((c) => c.alpha_two_code === code)];
     countries.push({
+      id: country.id,
       alpha_two_code: code,
       country: country.country,
       count: allData.filter((c) => c.alpha_two_code === code).length,

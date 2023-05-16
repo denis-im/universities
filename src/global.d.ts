@@ -2,6 +2,7 @@ export {};
 
 declare global {
   type CountryType = {
+    id: number;
     domains?: string[];
     country: string;
     alpha_two_code: string;

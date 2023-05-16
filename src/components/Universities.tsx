@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { StateContext } from "../contexts/StateContext";
 import Paper from "@mui/material/Paper";
@@ -14,10 +14,13 @@ import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import { Typography } from "@mui/material";
 import { getComparator, stableSort } from "../helper";
+import SearchBox from "./SearchBox";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {};
 
 type UniversityType = {
+  id: number;
   domain: string;
   "state-province": string;
   web_page: string;
@@ -26,6 +29,7 @@ type UniversityType = {
 
 const CountryToUniversity = (c: CountryType): UniversityType => {
   return {
+    id: c.id,
     name: c.name ?? "",
     domain: c.domains![0] ?? "",
     "state-province": c["state-province"] ?? "",
@@ -33,18 +37,30 @@ const CountryToUniversity = (c: CountryType): UniversityType => {
   };
 };
 
+const filterData = (allData: CountryType[], code: string): UniversityType[] => {
+  return allData
+    .filter((c: CountryType) => c.alpha_two_code === code)
+    .map(CountryToUniversity);
+};
+
 const Universities = (props: Props) => {
   const { code } = useParams();
   const { allData, rowsPerPage, setRowsPerPage } = useContext(StateContext);
 
   const [page, setPage] = React.useState(0);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [data, setData] = React.useState(filterData(allData, code!));
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("name");
   const navigate = useNavigate();
 
-  const data: UniversityType[] = allData
-    .filter((c: CountryType) => c.alpha_two_code === code)
-    .map(CountryToUniversity);
+  useEffect(() => {
+    const newData = allData.filter((c: CountryType) =>
+      c.name!.toLowerCase().includes(searchTerm)
+    );
+    setData(filterData(newData, code!));
+    setPage(0);
+  }, [searchTerm, allData]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -107,7 +123,7 @@ const Universities = (props: Props) => {
     {
       id: "state-province",
       label: "State or province",
-      minWidth: 100,
+      minWidth: 170,
       align: "center",
       numeric: false,
       sortable: true,
@@ -130,7 +146,7 @@ const Universities = (props: Props) => {
     },
   ];
 
-  if (visibleRows.length === 0)
+  if (allData.length === 0)
     return (
       <Box
         sx={{
@@ -140,93 +156,123 @@ const Universities = (props: Props) => {
           margin: "auto",
         }}
       >
-        <Typography
+        <CircularProgress
           sx={{
             marginLeft: "50%",
             marginTop: "30%",
           }}
-          variant="h5"
-        >
-          No universities found
-        </Typography>
+        />
       </Box>
     );
 
   return (
-    <Paper sx={{ width: "80%", overflow: "hidden", margin: "auto" }}>
-      <TableContainer sx={{ height: "calc(100% - 50px);" }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  sortDirection={orderBy === column.id ? order : false}
-                >
-                  {column.sortable ? (
-                    <TableSortLabel
-                      active={orderBy === column.id}
-                      direction={orderBy === column.id ? order : "asc"}
-                      onClick={createSortHandler(column.id, column.sortable)}
-                    >
-                      {column.label}
-                      {orderBy === column.id ? (
-                        <Box component="span" sx={visuallyHidden}>
-                          {order === "desc"
-                            ? "sorted descending"
-                            : "sorted ascending"}
-                        </Box>
-                      ) : null}
-                    </TableSortLabel>
-                  ) : (
-                    <>{column.label}</>
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {visibleRows.map((university, i: number) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={`c${i}`}>
-                  {columns.map((column) => {
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.id === "web_page" ? (
-                          <a
-                            href={`${String(university.web_page)}`}
-                            rel="noreferrer"
-                            target="_blank"
+    <>
+      <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Paper
+        sx={{
+          width: "80%",
+          overflow: "hidden",
+          margin: "auto",
+          height: "100%",
+        }}
+      >
+        {visibleRows.length === 0 ? (
+          <Typography
+            sx={{
+              marginLeft: "40%",
+              marginTop: "10%",
+            }}
+            variant="h5"
+          >
+            No university has "{searchTerm}" in name
+          </Typography>
+        ) : (
+          <>
+            <TableContainer sx={{ height: "calc(100% - 50px);" }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                        sortDirection={orderBy === column.id ? order : false}
+                      >
+                        {column.sortable ? (
+                          <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? order : "asc"}
+                            onClick={createSortHandler(
+                              column.id,
+                              column.sortable
+                            )}
                           >
-                            {university[column.id]}
-                          </a>
+                            {column.label}
+                            {orderBy === column.id ? (
+                              <Box component="span" sx={visuallyHidden}>
+                                {order === "desc"
+                                  ? "sorted descending"
+                                  : "sorted ascending"}
+                              </Box>
+                            ) : null}
+                          </TableSortLabel>
                         ) : (
-                          university[column.id]
+                          <>{column.label}</>
                         )}
                       </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {visibleRows.map((university, i: number) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={`c${i}`}
+                        onClick={() => navigate(`/${code}/${university.id}`)}
+                      >
+                        {columns.map((column) => {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id === "web_page" ? (
+                                <a
+                                  href={`${String(university.web_page)}`}
+                                  rel="noreferrer"
+                                  target="_blank"
+                                >
+                                  {university[column.id]}
+                                </a>
+                              ) : (
+                                university[column.id]
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
                     );
                   })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 15, 30]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        showFirstButton
-        showLastButton
-        sx={{ maxHeight: 80 }}
-      />
-    </Paper>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 15, 30]}
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              showFirstButton
+              showLastButton
+              sx={{ maxHeight: 80 }}
+            />
+          </>
+        )}
+      </Paper>
+    </>
   );
 };
 

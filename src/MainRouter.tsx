@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Footer from "./components/Footer";
 import Universities from "./components/Universities";
+import University from "./components/University";
 
 function Layout() {
   return (
@@ -31,6 +32,7 @@ const MainRouter = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Countries />} />
         <Route path="/:code" element={<Universities />} />
+        <Route path="/:code/:uni" element={<University />} />
       </Route>
     </Routes>
   );
