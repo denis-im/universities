@@ -9,7 +9,9 @@ import Stack from "@mui/material/Stack";
 
 type Props = {};
 
+// !!!! Decide if will use or remove !!!!
 function toTitleCase(str: string) {
+  return str;
   return str.replace(/\b\w+/g, function (s) {
     return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();
   });

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StateContext } from "../contexts/StateContext";
 import Flag from "./Flag";
 import Paper from "@mui/material/Paper";
@@ -15,16 +15,27 @@ import { visuallyHidden } from "@mui/utils";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { getComparator, stableSort } from "../helper";
+import SearchBox from "./SearchBox";
 
 type Props = {};
 
 const Countries = (props: Props) => {
   const { countries, rowsPerPage, setRowsPerPage } = useContext(StateContext);
-
   const [page, setPage] = React.useState(0);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [countriesFiltered, setCountriesFiltered] = React.useState(countries);
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("country");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setCountriesFiltered(
+      countries.filter((c: CountryType) =>
+        c.country.toLowerCase().includes(searchTerm)
+      )
+    );
+    setPage(0);
+  }, [searchTerm, countries]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -54,8 +65,8 @@ const Countries = (props: Props) => {
     setOrderBy(property);
   };
 
-  const visibleRows = countries
-    ? stableSort(countries, getComparator(order, orderBy)).slice(
+  const visibleRows = countriesFiltered
+    ? stableSort(countriesFiltered, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       )
@@ -130,83 +141,88 @@ const Countries = (props: Props) => {
     );
 
   return (
-    <Paper sx={{ width: "80%", overflow: "hidden", margin: "auto" }}>
-      <TableContainer sx={{ height: "calc(100% - 50px);" }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                  sortDirection={orderBy === column.id ? order : false}
-                >
-                  {column.sortable ? (
-                    <TableSortLabel
-                      active={orderBy === column.id}
-                      direction={orderBy === column.id ? order : "asc"}
-                      onClick={createSortHandler(column.id, column.sortable)}
-                    >
-                      {column.label}
-                      {orderBy === column.id ? (
-                        <Box component="span" sx={visuallyHidden}>
-                          {order === "desc"
-                            ? "sorted descending"
-                            : "sorted ascending"}
-                        </Box>
-                      ) : null}
-                    </TableSortLabel>
-                  ) : (
-                    <>{column.label}</>
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {visibleRows.map((country, i: number) => {
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={`c${i}`}
-                  onClick={() => navigate(`/${country.alpha_two_code}`)}
-                >
-                  {columns.map((column) => {
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.id === "flag" ? (
-                          <Flag
-                            code={String(country.alpha_two_code)}
-                            country={String(country.country)}
-                          />
-                        ) : (
-                          country[column.id]
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 15, 30]}
-        component="div"
-        count={countries.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        showFirstButton
-        showLastButton
-        sx={{ maxHeight: 80 }}
-      />
-    </Paper>
+    <>
+      <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Paper
+        sx={{ width: "80%", overflow: "hidden", margin: "auto", marginTop: 2 }}
+      >
+        <TableContainer sx={{ height: "calc(100% - 50px);" }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                    sortDirection={orderBy === column.id ? order : false}
+                  >
+                    {column.sortable ? (
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : "asc"}
+                        onClick={createSortHandler(column.id, column.sortable)}
+                      >
+                        {column.label}
+                        {orderBy === column.id ? (
+                          <Box component="span" sx={visuallyHidden}>
+                            {order === "desc"
+                              ? "sorted descending"
+                              : "sorted ascending"}
+                          </Box>
+                        ) : null}
+                      </TableSortLabel>
+                    ) : (
+                      <>{column.label}</>
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {visibleRows.map((country, i: number) => {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={`c${i}`}
+                    onClick={() => navigate(`/${country.alpha_two_code}`)}
+                  >
+                    {columns.map((column) => {
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.id === "flag" ? (
+                            <Flag
+                              code={String(country.alpha_two_code)}
+                              country={String(country.country)}
+                            />
+                          ) : (
+                            country[column.id]
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 15, 30]}
+          component="div"
+          count={countriesFiltered.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          showFirstButton
+          showLastButton
+          sx={{ maxHeight: 80 }}
+        />
+      </Paper>
+    </>
   );
 };
 
