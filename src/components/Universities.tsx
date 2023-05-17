@@ -250,17 +250,7 @@ const Universities = (props: Props) => {
                         {columns.map((column) => {
                           return (
                             <TableCell key={column.id} align={column.align}>
-                              {column.id === "web_page" ? (
-                                <a
-                                  href={`${String(university.web_page)}`}
-                                  rel="noreferrer"
-                                  target="_blank"
-                                >
-                                  {university[column.id]}
-                                </a>
-                              ) : (
-                                university[column.id]
-                              )}
+                              {university[column.id]}
                             </TableCell>
                           );
                         })}

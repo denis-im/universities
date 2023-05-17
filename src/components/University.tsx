@@ -77,7 +77,7 @@ const University = (props: Props) => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <MyCell>Code</MyCell>
+              <MyCell>ISO code</MyCell>
               <MyCell>{university.alpha_two_code}</MyCell>
             </TableRow>
             <TableRow>
