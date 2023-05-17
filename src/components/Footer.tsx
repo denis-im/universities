@@ -10,7 +10,7 @@ import Stack from "@mui/material/Stack";
 type Props = {};
 
 const Footer = (props: Props) => {
-  const { countries } = useContext(StateContext);
+  const { countries, allData } = useContext(StateContext);
   const navigate = useNavigate();
   const location = useLocation();
   const pathnames = location.pathname
@@ -27,6 +27,10 @@ const Footer = (props: Props) => {
     pathnames[0].label = countries.find(
       (c: CountryType) => c.alpha_two_code === pathnames[0].path
     ).country;
+  }
+
+  if (countries.length > 0 && pathnames.length > 1) {
+    pathnames[1].label = allData[pathnames[1].path].name;
   }
 
   return (
