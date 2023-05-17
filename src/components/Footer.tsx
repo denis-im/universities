@@ -6,6 +6,8 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import "../assets/styles/Footer.css";
 
 type Props = {};
 
@@ -40,13 +42,17 @@ const Footer = (props: Props) => {
       justifyContent="center"
       alignItems="center"
       sx={{ margin: "10px" }}
+      className="footer"
     >
       {pathnames[0] && (
         <Button variant="outlined" onClick={() => navigate(backTo)}>
           Back
         </Button>
       )}
-      <Breadcrumbs aria-label="Breadcrumb">
+      <Breadcrumbs
+        aria-label="Breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+      >
         <Link color="inherit" component={RouterLink} to="/">
           Home
         </Link>

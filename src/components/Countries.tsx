@@ -165,7 +165,7 @@ const Countries = (props: Props) => {
         ) : (
           <>
             <TableContainer sx={{ height: "calc(100% - 50px);" }}>
-              <Table stickyHeader aria-label="sticky table">
+              <Table stickyHeader aria-label="sticky table" className="table">
                 <TableHead>
                   <TableRow>
                     {columns.map((column) => (

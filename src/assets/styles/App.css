@@ -1,0 +1,15 @@
+.MuiBox-root {
+  background-color: #e7cfbc;
+}
+
+.table tr:hover {
+  background-color: #ffffff !important;
+}
+
+.table tr:nth-child(odd) {
+  background-color: #fee9e1;
+}
+
+.table tr:nth-child(even) {
+  background-color: #fff7f3;
+}

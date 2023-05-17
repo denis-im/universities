@@ -18,7 +18,12 @@ const Header = (props: Props) => {
       }}
     >
       <img src={Hat} alt="University hat" style={{ height: 70 }} />
-      <Typography variant="h4" align="center" sx={{ margin: "20px" }}>
+      <Typography
+        variant="h4"
+        align="center"
+        sx={{ margin: "20px" }}
+        fontFamily="Raleway"
+      >
         Universities App
       </Typography>
     </Box>
