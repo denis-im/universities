@@ -1,14 +1,3 @@
-// export const sorterAsc = (sortBy: string) => (a: any, b: any) =>
-//   a[sortBy].toLowerCase() > b[sortBy].toLowerCase() ? 1 : -1;
-
-// export const sorterDesc = (sortBy: string) => (b: any, a: any) =>
-//   a[sortBy].toLowerCase() > b[sortBy].toLowerCase() ? 1 : -1;
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-
 export function stableSort<T>(
   array: readonly T[],
   comparator: (a: T, b: T) => number
