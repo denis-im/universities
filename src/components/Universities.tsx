@@ -54,9 +54,10 @@ const Universities = (props: Props) => {
   const [orderBy, setOrderBy] = React.useState<keyof Data>("name");
   const navigate = useNavigate();
 
-  const countryName = allData.find(
-    (c: CountryType) => c.alpha_two_code === code
-  ).country;
+  const countryName =
+    allData.length > 0
+      ? allData.find((c: CountryType) => c.alpha_two_code === code).country
+      : "";
 
   useEffect(() => {
     const newData = allData.filter((c: CountryType) =>
